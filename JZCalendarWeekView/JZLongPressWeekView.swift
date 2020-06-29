@@ -32,6 +32,9 @@ public protocol JZLongPressViewDelegate: class {
     ///   - longPressType: the long press type when gusture cancels
     ///   - startDate: the startDate of the event when gesture cancels
     func weekView(_ weekView: JZLongPressWeekView, longPressType: JZLongPressWeekView.LongPressType, didCancelLongPressAt startDate: Date)
+
+    /// Make a delay before hiding the new (.addNew) event view
+    func weekViewNewViewDismissDelay(_ weekView: JZLongPressWeekView) -> Double
 }
 
 public protocol JZLongPressViewDataSource: class {
@@ -57,6 +60,7 @@ extension JZLongPressViewDelegate {
     public func weekView(_ weekView: JZLongPressWeekView, longPressType: JZLongPressWeekView.LongPressType, didCancelLongPressAt startDate: Date) {}
     public func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date) {}
     public func weekView(_ weekView: JZLongPressWeekView, editingEvent: JZBaseEvent, didEndMoveLongPressAt startDate: Date) {}
+    public func weekViewNewViewDismissDelay(_ weekView: JZLongPressWeekView) -> Double { return 0 }
 }
 
 extension JZLongPressViewDataSource {
@@ -132,6 +136,9 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// The most right X in the collectionView that you want longPress gesture enable.
     /// If you customise some decoration and supplementry views on right, **must** override this variable
     open var longPressRightMarginX: CGFloat { return frame.width }
+
+    /// Make a delay before hiding the new (.addNew) event view
+    public var newViewDismissDelay = Double(0)
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -461,7 +468,12 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
 
         } else if state == .ended {
 
-            self.longPressView.removeFromSuperview()
+            let newViewDismissDelay = longPressDelegate?.weekViewNewViewDismissDelay(self) ?? Double(0)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + (currentLongPressType == .addNew ? newViewDismissDelay : 0)) {
+                self.longPressView.removeFromSuperview()
+            }
+
             if currentLongPressType == .addNew {
                 longPressDelegate?.weekView(self, didEndAddNewLongPressAt: longPressViewStartDate)
             } else if currentLongPressType == .move {
@@ -475,7 +487,12 @@ extension JZLongPressWeekView: UIGestureRecognizerDelegate {
         }
 
         if state == .ended || state == .cancelled {
-            longPressTimeLabel.removeFromSuperview()
+            let newViewDismissDelay = longPressDelegate?.weekViewNewViewDismissDelay(self) ?? Double(0)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + (currentLongPressType == .addNew ? newViewDismissDelay : 0)) {
+                self.longPressTimeLabel.removeFromSuperview()
+            }
+
             isLongPressing = false
             pressPosition = nil
 
