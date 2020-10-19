@@ -417,7 +417,7 @@ open class JZBaseWeekView: UIView {
         adjustedY = max(minY, min(adjustedY, maxY))
         let hour = Int(adjustedY / flowLayout.hourHeight)
         let minute = Int((adjustedY / flowLayout.hourHeight - CGFloat(hour)) * 60)
-        return (hour, minute)
+        return (hour + flowLayout.calendarStartHour, minute)
     }
 
     /**
