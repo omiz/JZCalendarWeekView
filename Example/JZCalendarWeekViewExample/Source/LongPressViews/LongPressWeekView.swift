@@ -12,6 +12,16 @@ import JZCalendarWeekView
 /// All-Day & Long Press
 class LongPressWeekView: JZLongPressWeekView {
 
+    static var flowLayoutToInitialize: JZWeekViewFlowLayout?
+
+    override func setup() {
+        if let flowLayoutToInitialize = LongPressWeekView.flowLayoutToInitialize {
+            flowLayout = flowLayoutToInitialize
+        }
+
+        super.setup()
+    }
+
     override func registerViewClasses() {
         super.registerViewClasses()
 

@@ -89,7 +89,10 @@ open class JZBaseWeekView: UIView {
     }
 
     open func setup() {
-        flowLayout = JZWeekViewFlowLayout()
+        if flowLayout == nil {
+            flowLayout = JZWeekViewFlowLayout()
+        }
+
         flowLayout.delegate = self
 
         collectionView = JZCollectionView(frame: bounds, collectionViewLayout: flowLayout)
