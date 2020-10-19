@@ -236,6 +236,9 @@ open class JZBaseWeekView: UIView {
         self.flowLayout.rowHeaderWidth = flowLayout.rowHeaderWidth
         self.flowLayout.columnHeaderHeight = flowLayout.columnHeaderHeight
         self.flowLayout.hourGridDivision = flowLayout.hourGridDivision
+        self.flowLayout.calendarStartHour = flowLayout.calendarStartHour
+        self.flowLayout.calendarEndHour = flowLayout.calendarEndHour
+
         self.flowLayout.invalidateLayoutCache()
         self.flowLayout.invalidateLayout()
     }
@@ -376,7 +379,7 @@ open class JZBaseWeekView: UIView {
         adjustedY = max(0, adjustedY)
         let hour = Int(adjustedY / flowLayout.hourHeight)
         let minute = Int((adjustedY / flowLayout.hourHeight - CGFloat(hour)) * 60)
-        return (hour, minute)
+        return (hour + flowLayout.calendarStartHour, minute)
     }
 
     /**
