@@ -47,7 +47,17 @@ class LongPressWeekView: JZLongPressWeekView {
             let views = getAllDayHeaderViews(allDayEvents: events as? [AllDayEvent] ?? [])
             alldayHeader.updateView(views: views)
             return alldayHeader
+
+        } else if kind == JZSupplementaryViewKinds.rowHeader {
+            if let rowHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: JZRowHeader.className, for: indexPath) as? JZRowHeader {
+                var date = flowLayout.timeForRowHeader(at: indexPath)
+                date = date.add(component: .hour, value: flowLayout.calendarStartHour)
+                rowHeader.updateView(date: date)
+                return rowHeader
+            }
+            preconditionFailure("HourRowHeader should be casted")
         }
+
         return super.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, at: indexPath)
     }
 

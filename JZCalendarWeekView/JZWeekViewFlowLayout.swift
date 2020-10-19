@@ -30,6 +30,11 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     public var hourGridDivision: JZHourGridDivision!
     var minuteHeight: CGFloat { return hourHeight / 60 }
 
+    // UI params: start/end hours
+    public var calendarStartHour = 0
+    public var calendarEndHour = 24
+    private lazy var calendarHourCount = calendarEndHour - calendarStartHour
+
     open var defaultHourHeight: CGFloat { return 50 }
     open var defaultRowHeaderWidth: CGFloat { return 42 }
     open var defaultColumnHeaderHeight: CGFloat { return 44 }
@@ -43,7 +48,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     open var itemMargin: UIEdgeInsets { return UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1) }
     /// weekview contentSize height
     open var maxSectionHeight: CGFloat {
-        let height = hourHeight * 24 // statement too long for Swift 5 compiler
+        let height = hourHeight * CGFloat(calendarHourCount) // statement too long for Swift 5 compiler
         return columnHeaderHeight + height + contentsMargin.top + contentsMargin.bottom + allDayHeaderHeight
     }
 
@@ -61,7 +66,9 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
     var currentTimeComponents: DateComponents {
         if cachedCurrentTimeComponents[0] == nil {
-            cachedCurrentTimeComponents[0] = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
+            var comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: Date())
+            comps.hour! -= calendarStartHour
+            cachedCurrentTimeComponents[0] = comps
         }
         return cachedCurrentTimeComponents[0]!
     }
@@ -95,10 +102,10 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     }
 
     // Custom UI parameters Initializer
-    public init(hourHeight: CGFloat?=nil, rowHeaderWidth: CGFloat?=nil, columnHeaderHeight: CGFloat?=nil, hourGridDivision: JZHourGridDivision?=nil) {
+    public init(hourHeight: CGFloat? = nil, rowHeaderWidth: CGFloat? = nil, columnHeaderHeight: CGFloat? = nil, hourGridDivision: JZHourGridDivision? = nil, calendarStartHour: Int? = nil, calendarEndHour: Int? = nil) {
         super.init()
 
-        setupUIParams(hourHeight: hourHeight, rowHeaderWidth: rowHeaderWidth, columnHeaderHeight: columnHeaderHeight, hourGridDivision: hourGridDivision)
+        setupUIParams(hourHeight: hourHeight, rowHeaderWidth: rowHeaderWidth, columnHeaderHeight: columnHeaderHeight, hourGridDivision: hourGridDivision, calendarStartHour: calendarStartHour, calendarEndHour: calendarEndHour)
         initializeMinuteTick()
     }
 
@@ -110,11 +117,16 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         minuteTimer?.invalidate()
     }
 
-    private func setupUIParams(hourHeight: CGFloat?=nil, rowHeaderWidth: CGFloat?=nil, columnHeaderHeight: CGFloat?=nil, hourGridDivision: JZHourGridDivision?=nil) {
+    private func setupUIParams(hourHeight: CGFloat? = nil, rowHeaderWidth: CGFloat? = nil, columnHeaderHeight: CGFloat? = nil, hourGridDivision: JZHourGridDivision? = nil, calendarStartHour: Int? = nil, calendarEndHour: Int? = nil) {
         self.hourHeight = hourHeight ?? defaultHourHeight
         self.rowHeaderWidth = rowHeaderWidth ?? defaultRowHeaderWidth
         self.columnHeaderHeight = columnHeaderHeight ?? defaultColumnHeaderHeight
         self.hourGridDivision = hourGridDivision ?? defaultHourGridDivision
+
+        if let calendarStartHour = calendarStartHour, let calendarEndHour = calendarEndHour {
+            self.calendarStartHour = calendarStartHour
+            self.calendarEndHour = calendarEndHour
+        }
     }
 
     private func initializeMinuteTick() {
@@ -196,7 +208,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
         var attributes =  UICollectionViewLayoutAttributes()
 
-        let sectionHeight = (hourHeight * 24).toDecimal1Value()
+        let sectionHeight = (hourHeight * CGFloat(calendarHourCount)).toDecimal1Value()
         let calendarGridMinY = columnHeaderHeight + contentsMargin.top + allDayHeaderHeight
         let calendarContentMinX = rowHeaderWidth + contentsMargin.left
         let calendarContentMinY = columnHeaderHeight + contentsMargin.top + allDayHeaderHeight
@@ -225,7 +237,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         // Row header
         let rowHeaderMinX = fmax(collectionView.contentOffset.x, 0)
 
-        for rowHeaderIndex in 0...24 {
+        for rowHeaderIndex in 0...calendarHourCount {
             (attributes, rowHeaderAttributes) = layoutAttributesForSupplemantaryView(at: IndexPath(item: rowHeaderIndex, section: 0),
                                                                                      ofKind: JZSupplementaryViewKinds.rowHeader,
                                                                                      withItemCache: rowHeaderAttributes)
@@ -311,7 +323,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
 
             let itemStartTime = startTimeForIndexPath(itemIndexPath)
             let itemEndTime = endTimeForIndexPath(itemIndexPath)
-            let startHourY = CGFloat(itemStartTime.hour!) * hourHeight
+            let startHourY = CGFloat(itemStartTime.hour! - calendarStartHour) * hourHeight
             let startMinuteY = CGFloat(itemStartTime.minute!) * minuteHeight
             let endHourY: CGFloat
             let endMinuteY = CGFloat(itemEndTime.minute!) * minuteHeight
@@ -319,7 +331,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
             if itemEndTime.day! != itemStartTime.day! {
                 endHourY = CGFloat(Calendar.current.maximumRange(of: .hour)!.count) * hourHeight + CGFloat(itemEndTime.hour!) * hourHeight
             } else {
-                endHourY = CGFloat(itemEndTime.hour!) * hourHeight
+                endHourY = CGFloat(itemEndTime.hour! - calendarStartHour) * hourHeight
             }
 
             let itemMinX = (sectionX + itemMargin.left).toDecimal1Value()
@@ -352,7 +364,7 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
         let calendarGridWidth = collectionViewContentSize.width - rowHeaderWidth - contentsMargin.left - contentsMargin.right
         var attributes = UICollectionViewLayoutAttributes()
 
-        for hour in 0...24 {
+        for hour in 0...calendarHourCount {
             (attributes, horizontalGridlineAttributes) = layoutAttributesForDecorationView(at: IndexPath(item: horizontalGridlineIndex, section: 0),
                                                                                            ofKind: JZDecorationViewKinds.horizontalGridline,
                                                                                            withItemCache: horizontalGridlineAttributes)
@@ -400,8 +412,8 @@ open class JZWeekViewFlowLayout: UICollectionViewFlowLayout {
     }
 
     override open var collectionViewContentSize: CGSize {
-        return CGSize(width: rowHeaderWidth + sectionWidth * CGFloat(collectionView!.numberOfSections),
-                      height: maxSectionHeight)
+        let maxHeight = max(maxSectionHeight, collectionView!.frame.height)
+        return CGSize(width: rowHeaderWidth + sectionWidth * CGFloat(collectionView!.numberOfSections), height: maxHeight)
     }
 
     // MARK: - Layout

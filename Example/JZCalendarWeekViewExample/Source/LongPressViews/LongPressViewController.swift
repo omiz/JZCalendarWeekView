@@ -14,6 +14,15 @@ class LongPressViewController: UIViewController {
     @IBOutlet weak var calendarWeekView: JZLongPressWeekView!
     let viewModel = AllDayViewModel()
 
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        LongPressWeekView.flowLayoutToInitialize = JZWeekViewFlowLayout(calendarStartHour: 9, calendarEndHour: 18)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
