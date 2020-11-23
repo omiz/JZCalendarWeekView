@@ -12,7 +12,7 @@ import UIKit
 open class JZLongPressEventCell: UICollectionViewCell {
 
     // Make sure update your event when each time configure cell in cellForRowAt
-    public var event: JZBaseEvent!
+    public var event: JZCalendarEvent!
 
     // You have to set the background color in contentView instead of cell background color, because cell reuse problems in collectionview
     // When setting alpha to cell, the alpha will back to 1 when collectionview scrolled, which means that moving cell will not be translucent

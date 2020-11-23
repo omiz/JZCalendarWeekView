@@ -77,7 +77,7 @@ open class JZWeekViewHelper {
      - Returns:
         A dictionary used by JZBaseWeekView. Key is a day Date, value is all the events in that day
      */
-    open class func getIntraEventsByDate<T: JZBaseEvent>(originalEvents: [T]) -> [Date: [T]] {
+    open class func getIntraEventsByDate<T: JZCalendarEvent>(originalEvents: [T]) -> [Date: [T]] {
         var resultEvents = [Date: [T]]()
         for event in originalEvents {
             let startDateStartDay = event.startDate.startOfDay

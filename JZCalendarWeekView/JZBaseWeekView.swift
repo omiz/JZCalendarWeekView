@@ -56,23 +56,22 @@ open class JZBaseWeekView: UIView {
         }
     }
     public var firstDayOfWeek: DayOfWeek?
-    public var allEventsBySection: [Date: [JZBaseEvent]]! {
+    public var allEventsBySection: [Date: [JZCalendarEvent]]! {
         didSet {
-            self.isAllDaySupported = allEventsBySection is [Date: [JZAllDayEvent]]
             if isAllDaySupported {
                 setupAllDayEvents()
             }
         }
     }
-    public var notAllDayEventsBySection = [Date: [JZAllDayEvent]]()
-    public var allDayEventsBySection = [Date: [JZAllDayEvent]]()
+    public var notAllDayEventsBySection = [Date: [JZCalendarEvent]]()
+    public var allDayEventsBySection = [Date: [JZCalendarEvent]]()
 
     public weak var baseDelegate: JZBaseViewDelegate?
     open var contentViewWidth: CGFloat {
         return frame.width - flowLayout.rowHeaderWidth - flowLayout.contentsMargin.left - flowLayout.contentsMargin.right
     }
     private var isFirstAppear: Bool = true
-    internal var isAllDaySupported: Bool!
+    internal var isAllDaySupported: Bool = true
     internal var scrollDirection: ScrollDirection?
 
     // Scrollable Range
@@ -158,7 +157,7 @@ open class JZBaseWeekView: UIView {
     */
     open func setupCalendar(numOfDays: Int,
                             setDate: Date,
-                            allEvents: [Date: [JZBaseEvent]],
+                            allEvents: [Date: [JZCalendarEvent]],
                             scrollType: JZScrollType = .pageScroll,
                             firstDayOfWeek: DayOfWeek? = nil,
                             currentTimelineType: JZCurrentTimelineType = .section,
@@ -194,7 +193,7 @@ open class JZBaseWeekView: UIView {
         notAllDayEventsBySection.removeAll()
         allDayEventsBySection.removeAll()
         for (date, events) in allEventsBySection {
-            guard let allDayEvents = events as? [JZAllDayEvent] else { continue }
+            guard let allDayEvents = events as? [JZCalendarEvent] else { continue }
             notAllDayEventsBySection[date] = allDayEvents.filter { !$0.isAllDay }
             allDayEventsBySection[date] = allDayEvents.filter { $0.isAllDay }
         }
@@ -243,7 +242,7 @@ open class JZBaseWeekView: UIView {
     /// Reload the collectionView and flowLayout
     /// - Parameters:
     ///   - reloadEvents: If provided new events, current events will be reloaded. Default value is nil.
-    open func forceReload(reloadEvents: [Date: [JZBaseEvent]]? = nil) {
+    open func forceReload(reloadEvents: [Date: [JZCalendarEvent]]? = nil) {
         if let events = reloadEvents { self.allEventsBySection = events }
 
         DispatchQueue.main.async { [weak self] in
@@ -307,7 +306,7 @@ open class JZBaseWeekView: UIView {
     /// Get current event with item indexPath
     ///
     /// - Parameter indexPath: The indexPath of an item in collectionView
-    open func getCurrentEvent(with indexPath: IndexPath) -> JZBaseEvent? {
+    open func getCurrentEvent(with indexPath: IndexPath) -> JZCalendarEvent? {
         let date = flowLayout.dateForColumnHeader(at: indexPath)
         return isAllDaySupported ? notAllDayEventsBySection[date]?[indexPath.row] : allEventsBySection[date]?[indexPath.row]
     }

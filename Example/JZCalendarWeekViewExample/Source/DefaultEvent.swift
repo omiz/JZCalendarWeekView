@@ -9,20 +9,35 @@
 import Foundation
 import JZCalendarWeekView
 
-class DefaultEvent: JZBaseEvent {
-
+class DefaultEvent: JZCalendarEvent {
+    var eventID: String
+    
+    var startDate: Date
+    
+    var endDate: Date
+    
+    var isAllDay: Bool = false
+    
+    var intraStartDate: Date
+    
+    var intraEndDate: Date
+    
     var location: String
+    
     var title: String
 
     init(id: String, title: String, startDate: Date, endDate: Date, location: String) {
+        self.eventID = id
+        self.startDate = startDate
+        self.endDate = endDate
+        self.isAllDay = false
+        self.intraStartDate = startDate
+        self.intraEndDate = endDate
         self.location = location
         self.title = title
-
-        // If you want to have you custom uid, you can set the parent class's id with your uid or UUID().uuidString (In this case, we just use the base class id)
-        super.init(id: id, startDate: startDate, endDate: endDate)
     }
 
-    override func copy(with zone: NSZone?) -> Any {
-        return DefaultEvent(id: id, title: title, startDate: startDate, endDate: endDate, location: location)
+    func copy(with zone: NSZone?) -> Any {
+        return DefaultEvent(id: eventID, title: title, startDate: startDate, endDate: endDate, location: location)
     }
 }

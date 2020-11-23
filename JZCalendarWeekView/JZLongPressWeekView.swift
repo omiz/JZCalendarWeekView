@@ -23,7 +23,7 @@ public protocol JZLongPressViewDelegate: class {
     ///   - weekView: current long pressed JZLongPressWeekView
     ///   - editingEvent: the moving (existed, editing) event
     ///   - startDate: the startDate of the event when gesture ends
-    func weekView(_ weekView: JZLongPressWeekView, editingEvent: JZBaseEvent, didEndMoveLongPressAt startDate: Date)
+    func weekView(_ weekView: JZLongPressWeekView, editingEvent: JZCalendarEvent, didEndMoveLongPressAt startDate: Date)
 
     /// Sometimes the longPress will be cancelled because some curtain reason.
     /// Normally this function no need to be implemented.
@@ -56,7 +56,7 @@ extension JZLongPressViewDelegate {
     // Keep them optional
     public func weekView(_ weekView: JZLongPressWeekView, longPressType: JZLongPressWeekView.LongPressType, didCancelLongPressAt startDate: Date) {}
     public func weekView(_ weekView: JZLongPressWeekView, didEndAddNewLongPressAt startDate: Date) {}
-    public func weekView(_ weekView: JZLongPressWeekView, editingEvent: JZBaseEvent, didEndMoveLongPressAt startDate: Date) {}
+    public func weekView(_ weekView: JZLongPressWeekView, editingEvent: JZCalendarEvent, didEndMoveLongPressAt startDate: Date) {}
 }
 
 extension JZLongPressViewDataSource {
@@ -83,7 +83,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// This structure is used to save editing information before reusing collectionViewCell (Type Move used only)
     private struct CurrentEditingInfo {
         /// The editing event when move type long press(used to be currentMovingCell, it is a reference of cell but item will be reused in CollectionView!!)
-        var event: JZBaseEvent!
+        var event: JZCalendarEvent!
         /// The editing cell original size, get it from the long press status began
         var cellSize: CGSize!
         /// (REPLACED THIS ONE WITH EVENT ID NOW) Save current indexPath to check whether a cell is the previous one ()
@@ -340,7 +340,7 @@ open class JZLongPressWeekView: JZBaseWeekView {
     /// Use the event id to check the cell item is the original cell
     private func isOriginalMovingCell(_ cell: UICollectionViewCell) -> Bool {
         if let cell = cell as? JZLongPressEventCell {
-            return cell.event.id == currentEditingInfo.event.id
+            return cell.event.eventID == currentEditingInfo.event.eventID
         } else {
             return false
         }
