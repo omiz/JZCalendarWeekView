@@ -87,9 +87,7 @@ open class JZWeekViewHelper {
                 if resultEvents[startDateStartDay] == nil {
                     resultEvents[startDateStartDay] = [T]()
                 }
-                if let copiedEvent = event.copy() as? T {
-                    resultEvents[startDateStartDay]?.append(copiedEvent)
-                }
+                resultEvents[startDateStartDay]?.append(event)
             } else {
                 // Cross days
                 for day in 0...daysBetween {
@@ -97,16 +95,16 @@ open class JZWeekViewHelper {
                     if resultEvents[currentStartDate] == nil {
                         resultEvents[currentStartDate] = [T]()
                     }
-                    guard let newEvent = event.copy() as? T else { return resultEvents }
-                    if day == 0 {
-                        newEvent.intraEndDate = startDateStartDay.endOfDay
-                    } else if day == daysBetween {
-                        newEvent.intraStartDate = currentStartDate
-                    } else {
-                        newEvent.intraStartDate = currentStartDate.startOfDay
-                        newEvent.intraEndDate = currentStartDate.endOfDay
-                    }
-                    resultEvents[currentStartDate]?.append(newEvent)
+//                    guard let newEvent = event.copy() as? T else { return resultEvents }
+//                    if day == 0 {
+//                        newEvent.intraEndDate = startDateStartDay.endOfDay
+//                    } else if day == daysBetween {
+//                        newEvent.intraStartDate = currentStartDate
+//                    } else {
+//                        newEvent.intraStartDate = currentStartDate.startOfDay
+//                        newEvent.intraEndDate = currentStartDate.endOfDay
+//                    }
+                    resultEvents[currentStartDate]?.append(event)
                 }
             }
         }

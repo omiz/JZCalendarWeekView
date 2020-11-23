@@ -17,10 +17,6 @@ class AllDayEvent: JZCalendarEvent {
     var endDate: Date
     
     var isAllDay: Bool
-    
-    var intraStartDate: Date
-    
-    var intraEndDate: Date
 
     var location: String
     var title: String
@@ -31,8 +27,6 @@ class AllDayEvent: JZCalendarEvent {
         self.startDate = startDate
         self.endDate = endDate
         self.isAllDay = isAllDay
-        self.intraStartDate = startDate
-        self.intraEndDate = endDate
         self.location = location
         self.title = title
     }

@@ -10,6 +10,7 @@ import Foundation
 import JZCalendarWeekView
 
 class DefaultEvent: JZCalendarEvent {
+    
     var eventID: String
     
     var startDate: Date
@@ -17,10 +18,6 @@ class DefaultEvent: JZCalendarEvent {
     var endDate: Date
     
     var isAllDay: Bool = false
-    
-    var intraStartDate: Date
-    
-    var intraEndDate: Date
     
     var location: String
     
@@ -31,8 +28,6 @@ class DefaultEvent: JZCalendarEvent {
         self.startDate = startDate
         self.endDate = endDate
         self.isAllDay = false
-        self.intraStartDate = startDate
-        self.intraEndDate = endDate
         self.location = location
         self.title = title
     }
