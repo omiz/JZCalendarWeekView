@@ -12,8 +12,11 @@ open class JZRowHeaderBackground: UICollectionReusableView {
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
-
+        if #available(iOS 13.0, *) {
+            backgroundColor = UIColor.secondarySystemBackground
+        } else {
+            backgroundColor = UIColor.white
+        }
     }
 
     required public init?(coder aDecoder: NSCoder) {

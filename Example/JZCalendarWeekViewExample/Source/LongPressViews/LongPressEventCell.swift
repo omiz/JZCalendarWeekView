@@ -22,7 +22,11 @@ class LongPressEventCell: JZLongPressEventCell {
         setupBasic()
         // You have to set the background color in contentView instead of cell background color, because cell reuse problems in collectionview
         // When setting alpha to cell, the alpha will back to 1 when collectionview scrolled, which means that moving cell will not be translucent
-        self.contentView.backgroundColor = UIColor(hex: 0xEEF7FF)
+        if #available(iOS 13.0, *) {
+            self.contentView.backgroundColor = .secondarySystemBackground
+        } else {
+            self.contentView.backgroundColor = UIColor(hex: 0xEEF7FF)
+        }
     }
 
     func setupBasic() {

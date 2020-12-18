@@ -31,6 +31,14 @@ open class JZAllDayHeader: UICollectionReusableView {
         self.clipsToBounds = true
         setupScrollView()
         setupStackView()
+        setupLeftDivider()
+    }
+    
+    private func setupLeftDivider() {
+        let leftDivider = UIView()
+        leftDivider.backgroundColor = JZWeekViewColors.gridLine
+        addSubview(leftDivider)
+        leftDivider.setAnchorConstraintsEqualTo(widthAnchor: 0.5, topAnchor: (topAnchor, 0), bottomAnchor: (bottomAnchor, 0), leadingAnchor: (leadingAnchor, 0))
     }
 
     private func setupScrollView() {

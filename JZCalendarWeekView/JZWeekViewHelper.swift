@@ -133,7 +133,7 @@ open class JZWeekViewHelper {
     ///   - weekView: the JZWeekView
     open class func viewTransitionHandler(to size: CGSize, weekView: JZBaseWeekView, needRefresh: Bool = true) {
         if hasNotch {
-            let flowLayout = weekView.flowLayout!
+            guard let flowLayout = weekView.flowLayout else { return }
             // Not differentiate the left and right because of willTransition cannot get the following UIDeviceOrientation
             let isLandscape = size.width > size.height
             flowLayout.rowHeaderWidth = isLandscape ? flowLayout.defaultRowHeaderWidth + CGFloat(32) : flowLayout.defaultRowHeaderWidth

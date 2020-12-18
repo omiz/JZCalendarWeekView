@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  JZCalendarWeekView
+
+  Created by Omar Allaham on 12/18/20.
+  Copyright © 2020 Jeff Zhang. All rights reserved.
+*/
+
+/* Section header title of the all day events */
+"all-day" = "Ganztägig";

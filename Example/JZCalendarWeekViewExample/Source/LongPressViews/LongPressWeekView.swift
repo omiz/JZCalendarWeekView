@@ -14,6 +14,10 @@ class LongPressWeekView: JZLongPressWeekView {
 
     override func registerViewClasses() {
         super.registerViewClasses()
+        
+        collectionView.bounces = true
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.alwaysBounceVertical = true
 
         self.collectionView.register(UINib(nibName: LongPressEventCell.className, bundle: nil), forCellWithReuseIdentifier: LongPressEventCell.className)
     }

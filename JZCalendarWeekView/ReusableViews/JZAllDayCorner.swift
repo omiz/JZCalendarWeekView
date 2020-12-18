@@ -20,10 +20,15 @@ open class JZAllDayCorner: UICollectionReusableView {
     }
 
     open func setupUI() {
-        self.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            self.backgroundColor = UIColor.secondarySystemBackground
+        } else {
+            self.backgroundColor = .white
+        }
         self.clipsToBounds = true
         self.addSubview(lblTitle)
-        lblTitle.text = "all-day"
+        let bundle = Bundle(for: Self.self)
+        lblTitle.text = NSLocalizedString("all-day", tableName: nil, bundle: bundle, value: "", comment: "Section header title of the all day events")
         lblTitle.textColor = JZWeekViewColors.allDayHeader
         lblTitle.font = UIFont.systemFont(ofSize: 12)
         // Support iPhone X Landscape state (same as JZRowHeader)

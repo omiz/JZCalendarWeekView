@@ -14,6 +14,9 @@ class DefaultWeekView: JZBaseWeekView {
     override func registerViewClasses() {
         super.registerViewClasses()
 
+        collectionView.bounces = true
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.alwaysBounceVertical = true
         self.collectionView.register(UINib(nibName: EventCell.className, bundle: nil), forCellWithReuseIdentifier: EventCell.className)
     }
 

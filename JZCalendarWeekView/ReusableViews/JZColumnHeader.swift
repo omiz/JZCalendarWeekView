@@ -19,11 +19,19 @@ open class JZColumnHeader: UICollectionReusableView {
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         setupUI()
+        setupLeftDivider()
         backgroundColor = .clear
     }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupLeftDivider() {
+        let leftDivider = UIView()
+        leftDivider.backgroundColor = JZWeekViewColors.gridLine
+        addSubview(leftDivider)
+        leftDivider.setAnchorConstraintsEqualTo(widthAnchor: 0.5, topAnchor: (topAnchor, 0), bottomAnchor: (bottomAnchor, 0), leadingAnchor: (leadingAnchor, 0))
     }
 
     private func setupUI() {

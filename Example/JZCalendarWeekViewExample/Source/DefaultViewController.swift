@@ -25,6 +25,10 @@ class DefaultViewController: UIViewController {
 
     // Support device orientation change
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        guard let calendarWeekView = calendarWeekView else { return }
+        
         JZWeekViewHelper.viewTransitionHandler(to: size, weekView: calendarWeekView)
     }
 
