@@ -23,6 +23,14 @@ extension JZBaseViewDelegate {
 }
 
 open class JZBaseWeekView: UIView {
+    
+    
+    /// Minimum duration of the event to be displayed, if an event is less than the minimum duration the event will be extended for better readability
+    public var minimumEventMinutes: Int = 30 {
+        didSet {
+            forceReload()
+        }
+    }
 
     public var collectionView: JZCollectionView!
     public var flowLayout: JZWeekViewFlowLayout!
@@ -724,7 +732,20 @@ extension JZBaseWeekView: WeekViewFlowLayoutDelegate {
 
         if let events = allEventsBySection[date] {
             let event = isAllDaySupported ? notAllDayEventsBySection[date]![indexPath.item] : events[indexPath.item]
-            return event.endDate > date ? event.endDate : date
+            
+            let eventEndDate = event.endDate
+            
+            let minimumEndDate = event.startDate.add(component: .minute, value: minimumEventMinutes)
+            
+            let endDate: Date
+            
+            if minimumEndDate > eventEndDate && Calendar.autoupdatingCurrent.isDate(minimumEndDate, inSameDayAs: eventEndDate) {
+                endDate = minimumEndDate
+            } else {
+                endDate = eventEndDate
+            }
+            
+            return endDate > date ? endDate : date
         } else {
             fatalError("Cannot get events")
         }
