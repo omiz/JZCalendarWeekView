@@ -200,10 +200,10 @@ open class JZBaseWeekView: UIView {
     open func setupAllDayEvents() {
         notAllDayEventsBySection.removeAll()
         allDayEventsBySection.removeAll()
+        
         for (date, events) in allEventsBySection {
-            guard let allDayEvents = events as? [JZCalendarEvent] else { continue }
-            notAllDayEventsBySection[date] = allDayEvents.filter { !$0.isAllDay }
-            allDayEventsBySection[date] = allDayEvents.filter { $0.isAllDay }
+            notAllDayEventsBySection[date] = events.filter { !$0.isAllDay }
+            allDayEventsBySection[date] = events.filter { $0.isAllDay }
         }
     }
 

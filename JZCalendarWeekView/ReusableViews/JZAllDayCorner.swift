@@ -25,6 +25,7 @@ open class JZAllDayCorner: UICollectionReusableView {
         } else {
             self.backgroundColor = .white
         }
+
         self.clipsToBounds = true
         self.addSubview(lblTitle)
         let bundle = Bundle(for: Self.self)
