@@ -38,7 +38,7 @@ class LongPressViewController: UIViewController {
             // For example only
             setupCalendarViewWithSelectedData()
         } else {
-            calendarWeekView.setupCalendar(numOfDays: 3,
+            calendarWeekView.setupCalendar(numOfDays: 7,
                                            setDate: Date(),
                                            allEvents: viewModel.eventsByDate,
                                            scrollType: .pageScroll,

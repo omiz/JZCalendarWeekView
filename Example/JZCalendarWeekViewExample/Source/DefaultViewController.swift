@@ -41,7 +41,7 @@ class DefaultViewController: UIViewController {
             return
         }
         // Basic setup
-        calendarWeekView.setupCalendar(numOfDays: 3,
+        calendarWeekView.setupCalendar(numOfDays: 7,
                                        setDate: Date(),
                                        allEvents: viewModel.eventsByDate,
                                        scrollType: .pageScroll)
