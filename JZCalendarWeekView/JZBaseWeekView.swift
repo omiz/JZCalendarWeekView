@@ -729,6 +729,8 @@ extension JZBaseWeekView: WeekViewFlowLayoutDelegate {
 
     public func collectionView(_ collectionView: UICollectionView, layout: JZWeekViewFlowLayout, endTimeForItemAtIndexPath indexPath: IndexPath) -> Date {
         let date = flowLayout.dateForColumnHeader(at: indexPath)
+        
+        let endOfDay = date.endOfDay
 
         if let events = allEventsBySection[date] {
             let event = isAllDaySupported ? notAllDayEventsBySection[date]![indexPath.item] : events[indexPath.item]
@@ -745,7 +747,7 @@ extension JZBaseWeekView: WeekViewFlowLayoutDelegate {
                 endDate = eventEndDate
             }
             
-            return endDate > date ? endDate : date
+            return min(endOfDay, endDate)
         } else {
             fatalError("Cannot get events")
         }
